@@ -2,8 +2,10 @@ package com.postscriptum.ThePubLib.controller;
 
 
 import com.postscriptum.ThePubLib.entities.Book;
+import com.postscriptum.ThePubLib.entities.User;
 import com.postscriptum.ThePubLib.repos.BookRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -32,9 +34,13 @@ public class MainController {
     }
 
     @PostMapping("/index")
-    public String add(@RequestParam String title, @RequestParam Integer totalPages, Map<String, Object> model) {
+    public String add(
+            @AuthenticationPrincipal User user,
+            @RequestParam String title,
+            @RequestParam Integer totalPages, Map<String, Object> model
+    ) {
 
-        Book book = new Book(title, totalPages);
+        Book book = new Book(title, totalPages, user);
         bookRepo.save(book);
 
         Iterable<Book> books = bookRepo.findAll();

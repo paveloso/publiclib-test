@@ -1,9 +1,6 @@
 package com.postscriptum.ThePubLib.entities;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Book {
@@ -16,9 +13,18 @@ public class Book {
 
     private Integer totalPages;
 
-    public Book(String title, Integer totalPages) {
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User addedByUser;
+
+    public Book(String title, Integer totalPages, User user) {
         this.title = title;
         this.totalPages = totalPages;
+        this.addedByUser = user;
+    }
+
+    public String getAddedByWho() {
+        return addedByUser != null ? addedByUser.getUsername() : "<none>";
     }
 
     public Book() {
@@ -46,5 +52,13 @@ public class Book {
 
     public void setTotalPages(Integer totalPages) {
         this.totalPages = totalPages;
+    }
+
+    public User getAddedByUser() {
+        return addedByUser;
+    }
+
+    public void setAddedByUser(User addedByUser) {
+        this.addedByUser = addedByUser;
     }
 }
