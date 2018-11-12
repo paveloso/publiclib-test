@@ -4,6 +4,7 @@
     <@c.page>
 <div>
     <@l.logout />
+    <span><a href="/user">User list</a></span>
 </div>
 <div>
     <form method="post" action="index">
@@ -15,7 +16,7 @@
 </div>
 <div>List of Books</div>
 <form method="get" action="/index">
-    <input type="text" name="filter" value="${filter}">
+    <input type="text" name="filter" value="${filter!""}">
     <button type="submit">Find</button>
 </form>
 <#list books as book>

@@ -4,6 +4,7 @@ package com.postscriptum.ThePubLib.controller;
 import com.postscriptum.ThePubLib.entities.Book;
 import com.postscriptum.ThePubLib.entities.User;
 import com.postscriptum.ThePubLib.repos.BookRepo;
+import com.postscriptum.ThePubLib.repos.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -23,6 +24,7 @@ public class MainController {
 
     @GetMapping("/")
     public String greeting(Map<String, Object> model) {
+
         return "greeting";
     }
 
