@@ -62,7 +62,7 @@ public class MainController {
 
         Book book = new Book(title, totalPages, user);
 
-        if (file != null) {
+        if (file != null && !file.getOriginalFilename().isEmpty()) {
             File uploadDir = new File(uploadPath);
 
             if (!uploadDir.exists()) {
