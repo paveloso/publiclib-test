@@ -13,6 +13,8 @@ public class Book {
 
     private Integer totalPages;
 
+    private String bfilename;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private User addedByUser;
@@ -60,5 +62,13 @@ public class Book {
 
     public void setAddedByUser(User addedByUser) {
         this.addedByUser = addedByUser;
+    }
+
+    public String getBfilename() {
+        return bfilename;
+    }
+
+    public void setBfilename(String bfilename) {
+        this.bfilename = bfilename;
     }
 }
