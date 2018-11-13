@@ -72,7 +72,7 @@ public class MainController {
             String uuidFile = UUID.randomUUID().toString();
             String resultFilename = uuidFile + "." + file.getOriginalFilename();
 
-            file.transferTo(new File(resultFilename));
+            file.transferTo(new File(uploadPath + "/" + resultFilename));
 
 
             book.setBfilename(resultFilename);
