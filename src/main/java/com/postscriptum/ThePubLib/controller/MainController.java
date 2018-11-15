@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,6 +21,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.UUID;
 
 @Controller
@@ -62,6 +65,17 @@ public class MainController {
 
         Book book = new Book(title, totalPages, user);
 
+        saveImageFile(file, book);
+
+        bookRepo.save(book);
+
+        Iterable<Book> books = bookRepo.findAll();
+        model.put("books", books);
+
+        return "index";
+    }
+
+    private void saveImageFile(@RequestParam("file") MultipartFile file, Book book) throws IOException {
         if (file != null && !file.getOriginalFilename().isEmpty()) {
             File uploadDir = new File(uploadPath);
 
@@ -77,13 +91,49 @@ public class MainController {
 
             book.setBfilename(resultFilename);
         }
+    }
 
-        bookRepo.save(book);
+    @GetMapping("/user-books/{user}")
+    public String userBooks(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable User user,
+            Model model,
+            @RequestParam(required = false) Book book
+    ) {
 
-        Iterable<Book> books = bookRepo.findAll();
-        model.put("books", books);
+        Set<Book> books = user.getBooks();
 
-        return "index";
+        model.addAttribute("books", books);
+        model.addAttribute("book", book);
+        model.addAttribute("isCurrentUser", currentUser.equals(user));
+
+        return "userBooks";
+    }
+
+    @PostMapping("/user-books/{user}")
+    public String updateBook(
+            @AuthenticationPrincipal User currentUser,
+            @PathVariable Long user,
+            @RequestParam("id") Book book,
+            @RequestParam("title") String title,
+            @RequestParam("totalPages") Integer totalPages,
+            @RequestParam("file")MultipartFile file
+    ) throws IOException {
+        if (book.getAddedByUser().equals(currentUser)) {
+            if (!StringUtils.isEmpty(title)) {
+                book.setTitle(title);
+            }
+
+            if (!StringUtils.isEmpty(String.valueOf(totalPages))) {
+                book.setTotalPages(totalPages);
+            }
+
+            saveImageFile(file, book);
+
+            bookRepo.save(book);
+        }
+
+        return "redirect:/user-books/" + user;
     }
 
 }
