@@ -10,9 +10,9 @@
             <i>${book.totalPages}</i>
         </div>
         <div class="card-footer text-muted">
-            <a href="/user-books/${book.addedByWho.id}">${book.addedByWho}</a>
-            <#if book.addedByWho.id == currentUserId>
-            <a class="btn btn-primary" href="/user-books/${book.addedByWho.id}?book=${book.id}">Edit</a>
+            <a href="/user-books/${book.addedByUser.id}">${book.addedByWho}</a>
+            <#if book.addedByUser.id == currentUserId>
+            <a class="btn btn-primary" href="/user-books/${book.addedByUser.id}?book=${book.id}">Edit</a>
             </#if>
         </div>
     </div>
